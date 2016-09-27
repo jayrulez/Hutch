@@ -32,15 +32,7 @@ namespace Hutch.Controllers
 		public async Task<IActionResult> GetAsync()
 		{
 
-            await _busClient.PublishAsync(new EmailMessage() { To = "test@gmail.com", Body = "Message body."}, default(Guid), action => {
-                action.WithExchange(e => {
-                    e.WithName("email");
-                })
-                .WithRoutingKey("email")
-                .WithProperties(p => {
-                    p.Persistent = true;
-                });
-            });
+            await _busClient.PublishAsync(new EmailMessage() { To = "test@gmail.com", Body = "Message body."});
 
 			_logger.LogDebug("Published email message.");
 
