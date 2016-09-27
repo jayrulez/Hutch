@@ -14,10 +14,10 @@ namespace Hutch.Extensions.RawRabbit
         {
             var busClient = app.ApplicationServices.GetRequiredService<IBusClient<MessageContext>>();
 
-            busClient.SubscribeAsync<TMessage>((message, context) => {
+            busClient.SubscribeAsync<TMessage>(async (message, context) => {
                 var handler = app.ApplicationServices.GetRequiredService<TMessageHandler>();
 
-                return handler.HandleMessageAsync(message, context);
+                await handler.HandleMessageAsync(message, context);
             }, configuration);
 
             return app;
