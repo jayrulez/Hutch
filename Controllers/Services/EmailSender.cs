@@ -5,13 +5,13 @@ using RawRabbit.Context;
 
 namespace Hutch.Services
 {
-    public class EmailMessageHandler : IMessageHandler<EmailMessage>
+    public class EmailSender : IMessageHandler<EmailMessage>
     {
         public ILogger logger;
 
-        public EmailMessageHandler(ILoggerFactory loggerFactory)
+        public EmailSender(ILoggerFactory loggerFactory)
         {
-            logger = loggerFactory.CreateLogger<EmailMessageHandler>();
+            logger = loggerFactory.CreateLogger<EmailSender>();
         }
 
         public Task<bool> HandleMessageAsync(EmailMessage message, MessageContext context)

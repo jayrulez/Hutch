@@ -46,7 +46,8 @@ namespace Hutch
 				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
 				.AddMvc();
 
-                services.AddTransient<EmailMessageHandler, EmailMessageHandler>();
+                services.AddTransient<EmailSender, EmailSender>();
+                services.AddTransient<EmailLogger, EmailLogger>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -56,7 +57,7 @@ namespace Hutch
 				.AddConsole(Configuration.GetSection("Logging"));
 
 
-            app.AddMessageHandler<EmailMessage, EmailMessageHandler>(c => 
+            app.AddMessageHandler<EmailMessage, EmailSender>(c => 
             {
                 c.WithExchange(e => {
                     e.WithName("email");
@@ -68,7 +69,23 @@ namespace Hutch
                     q.WithName("email_sender");
                     q.WithAutoDelete(false);
                     q.WithDurability(true);
-                    q.WithExclusivity(true);
+                    q.WithExclusivity(false);
+                });
+            });
+            
+            app.AddMessageHandler<EmailMessage, EmailLogger>(c => 
+            {
+                c.WithExchange(e => {
+                    e.WithName("email");
+                    e.WithAutoDelete(false);
+                })
+                .WithRoutingKey("email")
+                .WithNoAck(false)
+                .WithQueue(q => {
+                    q.WithName("email_logger");
+                    q.WithAutoDelete(false);
+                    q.WithDurability(true);
+                    q.WithExclusivity(false);
                 });
             });
 
