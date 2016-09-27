@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using Hutch.Controllers;
 using Microsoft.Extensions.Logging;
 using RawRabbit.Context;
 
 namespace Hutch.Services
 {
-    public class EmailMessageHandler : QueueMessageHandler<EmailMessage>
+    public class EmailMessageHandler : IMessageHandler<EmailMessage>
     {
         public ILogger logger;
 
@@ -13,11 +14,11 @@ namespace Hutch.Services
             logger = loggerFactory.CreateLogger<EmailMessageHandler>();
         }
 
-        public bool HandleMessageAsync(EmailMessage message, MessageContext context)
+        public Task<bool> HandleMessageAsync(EmailMessage message, MessageContext context)
         {
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
 
-            return true;
+            return Task.FromResult(true);
         }
     }
 }
