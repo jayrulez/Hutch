@@ -94,7 +94,7 @@ namespace Hutch
                 });
             });*/
 
-            //UseSubscriber<EmailMessage, EmailMessageHandler>(app);
+            app.AddMessageHandler<EmailMessage, EmailMessageHandler>();
 
 			app.UseMvc();
 		}

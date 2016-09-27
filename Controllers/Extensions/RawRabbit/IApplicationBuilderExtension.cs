@@ -9,7 +9,7 @@ namespace Hutch.Extensions.RawRabbit
 {
     public static partial class IApplicationBuilderExtension
 	{
-        public static IApplicationBuilder UseSubscriber<TMessage, TMessageHandler>(IApplicationBuilder app) where TMessageHandler : QueueMessageHandler<TMessage>
+        public static IApplicationBuilder AddMessageHandler<TMessage, TMessageHandler>(this IApplicationBuilder app) where TMessageHandler : QueueMessageHandler<TMessage>
         {
             var busClient = app.ApplicationServices.GetRequiredService<IBusClient<MessageContext>>();
 
