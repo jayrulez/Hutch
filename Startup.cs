@@ -43,8 +43,8 @@ namespace Hutch
 				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
 				.AddMvc();
 
-                services.AddTransient<EmailSender, EmailSender>();
-                services.AddTransient<EmailLogger, EmailLogger>();
+                services.AddSingleton<EmailSender, EmailSender>();
+                services.AddSingleton<EmailLogger, EmailLogger>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
