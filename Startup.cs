@@ -13,6 +13,7 @@ using ILogger = Serilog.ILogger;
 using Hutch.Controllers;
 using Hutch.Services;
 using Hutch.Extensions.RawRabbit;
+using RawRabbit.Context;
 
 namespace Hutch
 {
@@ -35,16 +36,17 @@ namespace Hutch
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services
-				.AddRawRabbit(
-                    Configuration.GetSection("RawRabbit"),
+				.AddRawRabbit<AdvancedMessageContext>(
+                    config => config.SetBasePath(_rootPath)
+                        .AddJsonFile("rawrabbit.json"),
 					container => { 
                         container.AddSingleton(LoggingFactory.ApplicationLogger);
                     })
 				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
 				.AddMvc();
 
-                services.AddTransient<EmailSender, EmailSender>();
-                services.AddTransient<EmailLogger, EmailLogger>();
+                services.AddSingleton<EmailSender, EmailSender>();
+                services.AddSingleton<EmailLogger, EmailLogger>();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -52,8 +54,6 @@ namespace Hutch
 			loggerFactory
 				.AddSerilog(GetConfiguredSerilogger())
 				.AddConsole(Configuration.GetSection("Logging"));
-
-
             
             app.AddMessageHandler<EmailMessage, EmailSender>(c => 
             {

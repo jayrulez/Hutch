@@ -5,6 +5,6 @@ namespace Hutch.Services
 {
     public interface IMessageHandler<T>
     {
-        Task<bool> HandleMessageAsync(T message, MessageContext context);
+        Task<bool> HandleMessageAsync(T message, AdvancedMessageContext context);
     }
 }

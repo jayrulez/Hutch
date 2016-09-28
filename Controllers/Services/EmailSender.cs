@@ -14,7 +14,7 @@ namespace Hutch.Services
             logger = loggerFactory.CreateLogger<EmailSender>();
         }
 
-        public Task<bool> HandleMessageAsync(EmailMessage message, MessageContext context)
+        public Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
         {
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
 
