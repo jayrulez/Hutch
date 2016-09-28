@@ -1,4 +1,3 @@
-using System.Threading;
 using System.Threading.Tasks;
 using Hutch.Controllers;
 using Microsoft.Extensions.Logging;
@@ -17,8 +16,6 @@ namespace Hutch.Services
 
         public Task<bool> HandleMessageAsync(EmailMessage message, MessageContext context)
         {
-            Thread.Sleep(5000);
-            
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
 
             return Task.FromResult(true);

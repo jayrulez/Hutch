@@ -6,14 +6,11 @@ using Microsoft.Extensions.Logging;
 using RawRabbit.Attributes;
 using RawRabbit.Common;
 using RawRabbit.Extensions.Client;
-using RawRabbit.vNext;
 using RawRabbit.vNext.Logging;
 using Serilog;
 using Serilog.Events;
 using ILogger = Serilog.ILogger;
 using Hutch.Controllers;
-using System.Threading.Tasks;
-using RawRabbit.Context;
 using Hutch.Services;
 using Hutch.Extensions.RawRabbit;
 
@@ -39,7 +36,7 @@ namespace Hutch
 		{
 			services
 				.AddRawRabbit(
-					Configuration.GetSection("RawRabbit"),
+                    Configuration.GetSection("RawRabbit"),
 					container => { 
                         container.AddSingleton(LoggingFactory.ApplicationLogger);
                     })
@@ -57,6 +54,7 @@ namespace Hutch
 				.AddConsole(Configuration.GetSection("Logging"));
 
 
+            
             app.AddMessageHandler<EmailMessage, EmailSender>(c => 
             {
                 c.WithExchange(e => {
@@ -88,7 +86,7 @@ namespace Hutch
                     q.WithExclusivity(false);
                 });
             });
-
+            
 			app.UseMvc();
 		}
 
