@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RawRabbit.Attributes;
 using RawRabbit.Common;
-using RawRabbit.Extensions.Client;
 using RawRabbit.vNext.Logging;
 using Serilog;
 using Serilog.Events;
@@ -14,6 +13,8 @@ using Hutch.Controllers;
 using Hutch.Services;
 using Hutch.Extensions.RawRabbit;
 using RawRabbit.Context;
+using RawRabbit.vNext;
+using RawRabbit;
 
 namespace Hutch
 {
@@ -45,6 +46,7 @@ namespace Hutch
 				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
 				.AddMvc();
 
+                //services.AddSingleton<IBusClient<AdvancedMessageContext>>(BusClientFactory.CreateDefault<AdvancedMessageContext>());
                 services.AddSingleton<EmailSender, EmailSender>();
                 services.AddSingleton<EmailLogger, EmailLogger>();
 		}
