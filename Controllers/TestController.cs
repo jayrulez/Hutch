@@ -2,12 +2,10 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RawRabbit;
 
 namespace Hutch.Controllers
-{
-	using IBusClient = RawRabbit.Extensions.Client.IBusClient;
-
-    public class EmailMessage
+{    public class EmailMessage
     {
         public string To {get; set;}
         public string Body {get; set;}

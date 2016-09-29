@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using RawRabbit.Extensions.Client;
 using RawRabbit.Context;
 using Hutch.Services;
 using System;
 using RawRabbit.Configuration.Subscribe;
+using RawRabbit;
 
 namespace Hutch.Extensions.RawRabbit
 {
