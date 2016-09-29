@@ -1,8 +1,7 @@
-using System;
 using System.Threading.Tasks;
 using Hutch.Controllers;
+using Hutch.Extensions.RawRabbit;
 using Microsoft.Extensions.Logging;
-using RawRabbit.Context;
 
 namespace Hutch.Services
 {
@@ -15,7 +14,7 @@ namespace Hutch.Services
             logger = loggerFactory.CreateLogger<EmailSender>();
         }
 
-        public Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
+        public Task<bool> HandleMessageAsync(EmailMessage message, ApplicationMessageContext context)
         {
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
 

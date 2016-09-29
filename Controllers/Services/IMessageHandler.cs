@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using RawRabbit.Context;
+using Hutch.Extensions.RawRabbit;
 
 namespace Hutch.Services
 {
     public interface IMessageHandler<T>
     {
-        Task<bool> HandleMessageAsync(T message, AdvancedMessageContext context);
+        Task<bool> HandleMessageAsync(T message, ApplicationMessageContext context);
     }
 }

@@ -5,8 +5,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Hutch.Controllers
 {
+    using Extensions.RawRabbit;
     using RawRabbit;
-    using RawRabbit.Context;
 
     public class EmailMessage
     {
@@ -16,10 +16,10 @@ namespace Hutch.Controllers
 
 	public class TestController : Controller
 	{
-		private readonly IBusClient<AdvancedMessageContext> _busClient;
+		private readonly IBusClient<ApplicationMessageContext> _busClient;
 		private readonly ILogger<TestController> _logger;
 
-		public TestController(IBusClient<AdvancedMessageContext> busClient, ILoggerFactory loggerFactory)
+		public TestController(IBusClient<ApplicationMessageContext> busClient, ILoggerFactory loggerFactory)
 		{
 			_busClient = busClient;
 			_logger = loggerFactory.CreateLogger<TestController>();
