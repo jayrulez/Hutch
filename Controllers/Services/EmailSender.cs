@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Hutch.Controllers;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,10 @@ namespace Hutch.Services
         public Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
         {
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
+
+            //context.RetryLater(TimeSpan.FromMinutes(5));
+
+            //context.Nack();
 
             return Task.FromResult(true);
         }

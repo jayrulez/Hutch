@@ -17,6 +17,8 @@ namespace Hutch.Services
         public Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
         {
             logger.LogInformation($"Logging '{message.Body}' for '{message.To}'.");
+
+            //context.Nack();
             
             return Task.FromResult(true);
         }
