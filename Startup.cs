@@ -19,85 +19,58 @@ using RawRabbit.Context;
 
 namespace Hutch
 {
-	public class Startup
-	{
-		private readonly string _rootPath;
+    public class Startup
+    {
+        private readonly string _rootPath;
 
-		public Startup(IHostingEnvironment env)
-		{
-			_rootPath = env.ContentRootPath;
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(_rootPath)
-				.AddJsonFile("appsettings.json")
-				.AddEnvironmentVariables();
-			Configuration = builder.Build();
-		}
+        public Startup(IHostingEnvironment env)
+        {
+            _rootPath = env.ContentRootPath;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(_rootPath)
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables();
+            Configuration = builder.Build();
+        }
 
-		public IConfigurationRoot Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services)
-		{
-			services
-				.AddRawRabbit<AdvancedMessageContext>(
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services
+                .AddRawRabbit<AdvancedMessageContext>(
                     config => config.SetBasePath(_rootPath)
                         .AddJsonFile("rawrabbit.json"),
-					container => { 
+                    container =>
+                    {
                         container.AddSingleton(LoggingFactory.ApplicationLogger);
                     })
-				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
+                .AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
                 //.AddSingleton<IContextEnhancer, ApplicationContextEnhancer>()
-				.AddMvc();
+                .AddMvc();
 
-                services.AddSingleton<EmailSender, EmailSender>();
-                services.AddSingleton<EmailLogger, EmailLogger>();
-		}
+            services.AddSingleton<EmailSender, EmailSender>();
+            services.AddSingleton<EmailLogger, EmailLogger>();
+        }
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-		{
-			loggerFactory
-				.AddSerilog(GetConfiguredSerilogger())
-				.AddConsole(Configuration.GetSection("Logging"));
-            
-            app.AddMessageHandler<EmailMessage, EmailSender>(c => 
-            {
-                c.WithExchange(e => {
-                    e.WithName("email");
-                    e.WithAutoDelete(false);
-                })
-                .WithRoutingKey("email")
-                .WithNoAck(false)
-                .WithQueue(q => {
-                    q.WithName("email_sender");
-                    q.WithAutoDelete(false);
-                    q.WithDurability(true);
-                    q.WithExclusivity(false);
-                });
-            });
-            
-            app.AddMessageHandler<EmailMessage, EmailLogger>(c => 
-            {
-                c.WithExchange(e => {
-                    e.WithName("email");
-                    e.WithAutoDelete(false);
-                })
-                .WithRoutingKey("email")
-                .WithNoAck(false)
-                .WithQueue(q => {
-                    q.WithName("email_logger");
-                    q.WithAutoDelete(false);
-                    q.WithDurability(true);
-                    q.WithExclusivity(false);
-                });
-            });
-            
-			app.UseMvc();
-		}
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory
+                .AddSerilog(GetConfiguredSerilogger())
+                .AddConsole(Configuration.GetSection("Logging"));
 
-		private ILogger GetConfiguredSerilogger()
-		{
-			return new LoggerConfiguration()
-				.WriteTo.File($"{_rootPath}/Logs/serilog.log", LogEventLevel.Debug)
-				.CreateLogger();
-		}
-	}
+            app.AddMessageHandler<EmailMessage, EmailSender>();
+
+            app.AddMessageHandler<EmailMessage, EmailLogger>();
+
+            app.UseMvc();
+        }
+
+        private ILogger GetConfiguredSerilogger()
+        {
+            return new LoggerConfiguration()
+                .WriteTo.File($"{_rootPath}/Logs/serilog.log", LogEventLevel.Debug)
+                .CreateLogger();
+        }
+    }
 }

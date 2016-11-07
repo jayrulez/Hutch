@@ -19,21 +19,13 @@ namespace Hutch.Services
             logger = loggerFactory.CreateLogger<EmailSender>();
         }
 
-        public Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
+        public async Task<bool> HandleMessageAsync(EmailMessage message, AdvancedMessageContext context)
         {
             logger.LogInformation($"Sending '{message.Body}' to '{message.To}'.");
 
-            _busClient.PublishAsync<EmailMessage>(new EmailMessage() { To = "subscriber@gmail.com", Body = "Message published from subscriber." }, default(Guid), action => {
-                action.WithExchange(e => {
-                    e.WithName("email");
-                })
-                .WithRoutingKey("email")
-                .WithProperties(p => {
-                    p.Persistent = true;
-                });
-            });
+            await _busClient.PublishAsync<EmailMessage>(new EmailMessage() { To = "subscriber@gmail.com", Body = "Message published from subscriber." });
 
-            return Task.FromResult(true);
+            return true;
         }
     }
 }
