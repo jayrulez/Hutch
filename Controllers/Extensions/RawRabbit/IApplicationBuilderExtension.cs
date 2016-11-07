@@ -4,6 +4,7 @@ using Hutch.Services;
 using System;
 using RawRabbit.Configuration.Subscribe;
 using RawRabbit;
+using RawRabbit.Context;
 
 namespace Hutch.Extensions.RawRabbit
 {
@@ -11,7 +12,7 @@ namespace Hutch.Extensions.RawRabbit
 	{
         public static IApplicationBuilder AddMessageHandler<TMessage, TMessageHandler>(this IApplicationBuilder app, Action<ISubscriptionConfigurationBuilder> configuration = null) where TMessageHandler : IMessageHandler<TMessage>
         {
-            var busClient = app.ApplicationServices.GetRequiredService<IBusClient<ApplicationMessageContext>>();
+            var busClient = app.ApplicationServices.GetRequiredService<IBusClient<AdvancedMessageContext>>();
 
             busClient.SubscribeAsync<TMessage>(async (message, context) => {
                 var handler = app.ApplicationServices.GetRequiredService<TMessageHandler>();

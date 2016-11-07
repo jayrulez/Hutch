@@ -15,6 +15,7 @@ using Hutch.Extensions.RawRabbit;
 using RawRabbit.vNext;
 using RawRabbit;
 using RawRabbit.Context.Enhancer;
+using RawRabbit.Context;
 
 namespace Hutch
 {
@@ -37,12 +38,11 @@ namespace Hutch
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services
-				.AddRawRabbit<ApplicationMessageContext>(
+				.AddRawRabbit<AdvancedMessageContext>(
                     config => config.SetBasePath(_rootPath)
                         .AddJsonFile("rawrabbit.json"),
 					container => { 
                         container.AddSingleton(LoggingFactory.ApplicationLogger);
-                        container.AddSingleton<IContextEnhancer, ApplicationContextEnhancer>();
                     })
 				.AddSingleton<IConfigurationEvaluator, AttributeConfigEvaluator>()
                 //.AddSingleton<IContextEnhancer, ApplicationContextEnhancer>()
